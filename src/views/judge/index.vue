@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>A</h1>
+    <h1>B</h1>
     <div class="app-container">
       <upload-excel-component :on-success="handleSuccess" :before-upload="beforeUpload" />
       <!-- <el-table :data="state.tableData" border highlight-current-row style="width: 100%;margin-top:20px;">
@@ -9,9 +9,6 @@
     </div>
     <div>
       <ww-chart-data :chart-data="state.chartData" />
-    </div>
-    <div>
-      <p>{{state.arr}}</p>
     </div>
   </div>
 </template>
@@ -75,45 +72,36 @@ const beforeUpload = (file) => {
   return true
 }
 const handleSuccess = ({ results, header }) => {
-  // console.log(header, results)
-  state.tableData = results
   state.tableHeader = header
-  const obj = handleDateFn(results)
-  for (const key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key)) {
-      const element = obj[key]
-      state.chartData.xAxis[0].data.push(key)
-      state.chartData.series[0].data.push(element)
-    }
-  }
-}
-const handleDateFn = (data) => {
+  state.tableData = results
   state.chartData.xAxis[0].data = []
   state.chartData.series[0].data = []
+  const obj = handleDateFn(results)
+  console.log(obj)
+  obj.map(ele => {
+    state.chartData.xAxis[0].data.push(ele[0])
+    state.chartData.series[0].data.push(ele[1])
+  })
+}
+const handleDateFn = (data) => {
   const arr = []
-  const obj = {}
+  const mapObj = new Map()
+  let k = 'n'
   data.map((ele, index) => {
-    let touchTime = ele['Attributed Touch Time']
-    let installTime = ele['Install Time']
-    // console.log(touchTime, installTime)
-    let a = formatDate(touchTime, '/')
-    let b = formatDate(installTime, '/')
-    let c = 0
-    if (!isNaN(a) && !isNaN(b)) {
-      c = (b - a) / 1000
-      c = parseInt(c)
-      if (obj.hasOwnProperty(c)) {
-        obj[c] ++
-      } else {
-        obj[c] = 1
-      }
-      arr.push(c)
+    let n = ele[k]
+    let o = mapObj.get(n)
+    if (o) {
+      o = o + 1
+      mapObj.set(n, o)
+    } else {
+      mapObj.set(n, 1)
     }
   })
+  let finalArr = mapObj.entries()
   state.arr = arr.sort((a, b) => {
     return a - b
   })
-  return obj
+  return [...finalArr]
   // moment().format('YYYY-MM-DD')
 }
 const formatDate = (numb, format) => {

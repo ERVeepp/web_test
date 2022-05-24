@@ -77,7 +77,7 @@ const setting: SettingTy = {
    * @type {boolean} true | false
    * @description Whether need login
    */
-  isNeedLogin: true,
+  isNeedLogin: false,
   /**
    * @type {string} 'roles' | 'code'
    */

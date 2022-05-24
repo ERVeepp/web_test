@@ -39,7 +39,20 @@ export const constantRoutes: RouterTy = [
         name: 'Dashboard',
         component: () => import('@/views/dashboard/index.vue'),
         //using el svg icon, the elSvgIcon first when at the same time using elSvgIcon and icon
-        meta: { title: 'Dashboard', elSvgIcon: 'Fold' }
+        meta: { title: 'A', elSvgIcon: 'Fold' }
+      }
+    ]
+  },
+  {
+    path: '/judge',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'Judge',
+        component: () => import('@/views/judge/index.vue'),
+        //using el svg icon, the elSvgIcon first when at the same time using elSvgIcon and icon
+        meta: { title: 'B', elSvgIcon: 'Fold' }
       }
     ]
   },
